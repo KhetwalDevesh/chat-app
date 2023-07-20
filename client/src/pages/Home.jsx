@@ -24,10 +24,6 @@ const Home = ({ socket }) => {
 				return;
 			}
 			const roomId = uuidv4();
-			console.log(
-				"roomData.room_name",
-				JSON.stringify(roomData.room_name, null, 2)
-			);
 			setCurrentRoom(roomData.room_name);
 			setUsername(roomData.username);
 			socket.emit("join_room", roomData.room_name);
@@ -53,8 +49,7 @@ const Home = ({ socket }) => {
 					":" +
 					new Date(Date.now()).getMinutes(),
 			};
-			console.log("messageData", JSON.stringify(messageData, null, 2));
-			console.log("username", JSON.stringify(username, null, 2));
+
 			await socket.emit("send_message", messageDetail);
 			setChats((list) => [...list, messageDetail]);
 			setValue("message", "");
@@ -62,27 +57,19 @@ const Home = ({ socket }) => {
 	};
 
 	useEffect(() => {
-		console.log("currentRoom", JSON.stringify(currentRoom, null, 2));
-		console.log(
-			"isLoggedinInCurrentRoom",
-			JSON.stringify(isLoggedinInCurrentRoom, null, 2)
-		);
-
 		socket.on("receive_message", (data) => {
-			console.log("data", JSON.stringify(data, null, 2));
 			setChats((list) => [...list, data]);
 		});
 
 		socket.on("receiveFile", (data) => {
-			console.log("data", JSON.stringify(data, null, 2));
 			setChats((list) => [...list, data]);
 			const file = data.file;
 			const fileName = data.fileName;
-			console.log("file received in client", JSON.stringify(fileName, null, 2));
+
 			const fileBlob = new Blob([file]);
 			const fileType = fileBlob.type;
 			const fileURL = URL.createObjectURL(fileBlob);
-			console.log("fileURL", JSON.stringify(fileURL, null, 2));
+
 			const downloadLink = document.createElement("a");
 			downloadLink.href = fileURL;
 			downloadLink.download = fileName;
@@ -134,11 +121,6 @@ const Home = ({ socket }) => {
 									{chats.map((chat) => {
 										const fileBlob = new Blob([chat.file]);
 										const fileType = fileBlob.type;
-										console.log(
-											" URL.createObjectURL(fileBlob)",
-											JSON.stringify(URL.createObjectURL(fileBlob), null, 2)
-										);
-										console.log("fileType", JSON.stringify(fileType, null, 2));
 
 										if (chat.datatype !== "string") {
 											const fileExtension = chat?.fileName?.split(".");
@@ -147,7 +129,6 @@ const Home = ({ socket }) => {
 												fileExtension[1] === "jpeg" ||
 												fileExtension[1] === "jpg"
 											) {
-												console.log("inside image");
 												if (
 													document?.getElementById(`chat-img-${chat.id}`)
 														?.children?.length === 0
@@ -176,7 +157,7 @@ const Home = ({ socket }) => {
 												}
 											}
 										}
-										console.log("chats", JSON.stringify(chats, null, 2));
+
 										return (
 											<div key={chat.id}>
 												{chat.datatype === "string" ? (
@@ -299,86 +280,10 @@ const Home = ({ socket }) => {
 									editorText={editorText}
 									setEditorText={setEditorText}
 								/>
-								{/* <input
-										className="p-1 border-2 w-[40vw] h-[10vh] rounded-md border-black "
-										placeholder="message"
-										{...register("message")}
-									/>
-									<input
-										className="send-button px-3 py-1 m-2 w-[6rem] h-[3rem] bg-black rounded-md text-white cursor-pointer active:translate-y-2"
-										type="submit"
-										value="Enter"
-									/> */}
 							</div>
 						</div>
-						{/* {rooms.map((room) => {
-							console.log("room", JSON.stringify(room, null, 2));
-							return (
-								<div
-									onClick={() => {
-										setCurrentRoom(room.name);
-										if (room.name !== currentRoom) {
-											setIsLoggedinInCurrentRoom(false);
-										}
-									}}
-									key={room.id}
-									className={`flex justify-center items-center h-[80px] border-b-[2px] border-gray-400 cursor-pointer 
-									${room.name === currentRoom ? `bg-white` : `bg-[#f0f2f5]`}`}>
-									<div>{room.name}</div>
-								</div>
-							);
-						})} */}
 					</div>
 				</div>
-				{/* <div className="right  w-[100%]  flex-[2]">
-					<div>
-						<div className="h-[102px] border-b-2 border-gray-400 flex items-center pl-[20px]">
-							{currentRoom}
-						</div>
-						{currentRoom === "" ? (
-							// <div className="flex items-center justify-center h-[80vh]">
-							// 	<span className="text-3xl font-medium text-gray-600">
-							// 		Enter a room to start the chat!
-							// 	</span>
-							// </div>
-							<div></div>
-						) : (
-							<div>
-								{isLoggedinInCurrentRoom ? (
-									// <Chat
-									// 	isLoggedinInCurrentRoom={isLoggedinInCurrentRoom}
-									// 	currentRoom={currentRoom}
-									// 	username={myUsername}
-									// 	socket={socket}
-									// 	chats={chats}
-									// 	setChats={setChats}
-									// />
-									<div></div>
-								) : (
-									<div>
-										<div className="flex flex-col justify-center items-center  gap-2 h-[80vh]">
-											<span>Want to join the room? Enter your username</span>
-											<form
-												className="flex gap-2"
-												onSubmit={handleSubmit(onSubmitUsername)}>
-												<input
-													className="p-1 border-2 rounded-md border-black "
-													placeholder="username"
-													{...register("username")}
-												/>
-												<input
-													className="send-button px-3 py-1 bg-black rounded-md text-white cursor-pointer active:translate-y-2"
-													type="submit"
-													value="Enter"
-												/>
-											</form>
-										</div>
-									</div>
-								)}
-							</div>
-						)}
-					</div>
-				</div> */}
 			</div>
 		</div>
 	);

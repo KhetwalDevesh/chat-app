@@ -34,7 +34,6 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send_message", (data) => {
-		console.log("data", JSON.stringify(data, null, 2));
 		socket.to(data.room).emit("receive_message", data);
 	});
 
@@ -43,10 +42,6 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("sendFile", (data) => {
-		console.log("room", JSON.stringify(data.room, null, 2));
-		console.log("author", JSON.stringify(data.author, null, 2));
-		console.log("dataType", JSON.stringify(data.dataType, null, 2));
-		console.log("filename", JSON.stringify(data.fileName, null, 2));
 		socket.to(data.room).emit("receiveFile", data);
 	});
 });

@@ -189,11 +189,9 @@ const MenuBar2 = ({
 			return;
 		}
 		const file = files[0];
-		console.log("file", JSON.stringify(file, null, 2));
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			const fileData = e.target.result;
-			console.log("typeof(fileData)", JSON.stringify(typeof fileData, null, 2));
 			const messageDetail = {
 				id: uuidv4(),
 				room: currentRoom,
@@ -210,10 +208,6 @@ const MenuBar2 = ({
 			setChats((list) => [...list, messageDetail]);
 		};
 		reader.readAsArrayBuffer(file);
-		console.log("files", JSON.stringify(files, null, 2));
-		// socket.emit("upload", files[0], files[0].name, (status) => {
-		// 	console.log(status);
-		// });
 	};
 
 	const sendMessage = async () => {
@@ -236,10 +230,6 @@ const MenuBar2 = ({
 	};
 
 	const handleFileChange = (e) => {
-		console.log(
-			"e.target.files[0]",
-			JSON.stringify(e.target.files[0], null, 2)
-		);
 		formData.append("inputFile", e.target.files);
 		uploadFile(e.target.files);
 	};
@@ -253,10 +243,6 @@ const MenuBar2 = ({
 					style={{ display: "none" }}
 					// accept="image/*, .pdf, .docx"
 					onChange={(e) => {
-						// console.log(
-						// 	"e.target.files[0]",
-						// 	JSON.stringify(e.target.files[0], null, 2)
-						// );
 						handleFileChange(e);
 					}}
 				/>
